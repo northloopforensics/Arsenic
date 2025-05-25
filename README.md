@@ -1,5 +1,5 @@
 
-# **North Loop Consulting, LLC Software License Agreement**
+# **North Loop Consulting, LLC Arsenic Software License Agreement**
 
 **IMPORTANT:** READ THIS LICENSE CAREFULLY BEFORE USING THE SOFTWARE. BY USING THIS SOFTWARE, YOU AGREE TO BE BOUND BY THE TERMS OF THIS LICENSE.
 
