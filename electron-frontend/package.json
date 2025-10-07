@@ -1,0 +1,50 @@
+{
+  "name": "arsenic-mobile-triage",
+  "version": "2.0.0",
+  "description": "Arsenic Mobile Triage Tool - Electron Frontend",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "dist": "electron-builder --publish=never",
+    "dev": "electron . --dev"
+  },
+  "author": "North Loop Consulting, LLC - Charlie Rubisoff",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "electron": "^25.0.0",
+    "electron-builder": "^24.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.5.0"
+  },
+  "build": {
+    "appId": "com.northloopconsulting.arsenic",
+    "productName": "Arsenic Mobile Triage",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "node_modules/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/backend-fast",
+        "to": "backend-fast"
+      }
+    ],
+    "mac": {
+      "icon": "src/assets/icon.icns",
+      "category": "public.app-category.developer-tools"
+    },
+    "win": {
+      "icon": "src/assets/icon.ico",
+      "target": "nsis"
+    },
+    "linux": {
+      "icon": "src/assets/icon.png",
+      "target": "AppImage"
+    }
+  }
+}

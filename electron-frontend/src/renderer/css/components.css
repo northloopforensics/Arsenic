@@ -1,0 +1,686 @@
+/* Component-specific styles for Arsenic Mobile Triage Tool */
+
+/* iOS Backup Component - Clean Flexbox Layout */
+div#ios-backup.tab-pane,
+div#ios-backup.tab-pane.active,
+.tab-pane#ios-backup,
+.tab-pane#ios-backup.active {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    width: 100% !important;
+    padding: 1.5rem !important;
+    box-sizing: border-box !important;
+}
+
+div.ios-backup-layout,
+.ios-backup-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.5rem !important;
+    height: 100% !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* Top row: Device Info and Apps side by side using flexbox */
+div.ios-top-row,
+.ios-top-row {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 1.5rem !important;
+    flex: 1 !important;
+    width: 100% !important;
+    min-height: 400px !important;
+    box-sizing: border-box !important;
+    align-items: stretch !important;
+}
+
+div.device-info-section,
+.device-info-section {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 50% !important;
+    min-width: 0 !important;
+    width: 50% !important;
+    max-width: 50% !important;
+    box-sizing: border-box !important;
+}
+
+div.apps-info-section,
+.apps-info-section {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 50% !important;
+    min-width: 0 !important;
+    width: 50% !important;
+    max-width: 50% !important;
+    box-sizing: border-box !important;
+    max-height: 450px !important; /* Constrain overall height */
+    overflow: hidden !important; /* Prevent container from expanding */
+}
+
+.device-info-section .panel,
+.apps-info-section .panel {
+    margin-bottom: 0 !important; /* Override default panel margin */
+    height: 100% !important;
+    max-height: 400px !important; /* Constrain panel height */
+    overflow: hidden !important; /* Prevent panel overflow */
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* Bottom section: Backup controls spanning full width */
+.ios-backup-section {
+    flex-shrink: 0;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.backup-controls-row {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 2rem !important;
+    align-items: start;
+    width: 100%;
+}
+
+.backup-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.backup-status {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Device Status */
+.device-status {
+    font-size: 0.875rem;
+    color: var(--accent-blue);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+/* Apps Panel - Compact Scrollable Design */
+.apps-panel {
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    max-height: 350px !important; /* Reduced to match container constraints */
+    min-height: 300px !important; /* Ensure minimum height */
+    overflow: hidden !important; /* Prevent panel overflow */
+}
+
+.apps-search-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem; /* Reduced margin */
+    flex-shrink: 0;
+    padding: 0.75rem; /* Reduced padding */
+    background: var(--surface-color);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.apps-search-container label {
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    min-width: 65px;
+    text-align: right;
+    font-family: Arial, sans-serif;
+}
+
+.apps-search-container input {
+    flex: 1;
+    padding: 0.75rem 1rem; /* Reduced padding */
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--background-color);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    font-family: Arial, sans-serif;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.apps-search-container input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15), 0 2px 6px rgba(0, 0, 0, 0.15);
+    background: var(--background-color);
+    transform: translateY(-1px);
+}
+
+.apps-search-container input::placeholder {
+    color: var(--text-secondary);
+    font-style: italic;
+    opacity: 0.7;
+}
+
+/* Apps Count - Compact Card Style */
+.apps-count {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    min-width: 65px;
+    text-align: right;
+    font-family: Arial, sans-serif;
+}
+
+/* Apps List Container - Compact and Highly Scrollable */
+.apps-list-container {
+    flex: none !important; /* Don't allow expansion */
+    overflow: hidden !important;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    background: var(--surface-color);
+    min-height: 120px; /* Reduced minimum height */
+    max-height: 200px !important; /* Much smaller max height for compactness */
+    height: 200px !important; /* Force explicit height */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    flex-shrink: 0 !important; /* Prevent shrinking that might break constraints */
+}
+
+/* Apps List - Compact Scrollable Display */
+.apps-list {
+    height: 100% !important;
+    max-height: 200px !important; /* Force maximum height */
+    padding: 0.75rem; /* Reduced padding */
+    overflow-y: auto !important; /* Auto scroll when needed */
+    overflow-x: hidden !important;
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem; /* Smaller font size */
+    line-height: 1.5 !important; /* Tighter line height */
+    white-space: pre-line !important;
+    word-wrap: break-word;
+    color: var(--text-primary);
+    background: var(--surface-color);
+    scroll-behavior: smooth;
+}
+
+/* Enhanced Scrollbar for Better Visibility in Compact Space */
+.apps-list::-webkit-scrollbar {
+    width: 14px; /* Slightly wider for easier use in compact space */
+}
+
+.apps-list::-webkit-scrollbar-track {
+    background: #f8fafc;
+    border-radius: 8px;
+    margin: 4px 0;
+    border: 1px solid #e2e8f0;
+}
+
+.apps-list::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--primary-color) 0%, var(--accent-blue) 100%);
+    border-radius: 8px;
+    border: 2px solid #f8fafc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.apps-list::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--accent-blue) 0%, var(--primary-color) 100%);
+    transform: scale(1.05);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.apps-list::-webkit-scrollbar-thumb:active {
+    background: var(--primary-color);
+}
+
+/* Fade indicators removed per user request */
+
+.apps-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.search-container {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.search-container input {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+}
+
+.sort-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sort-container label {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.sort-container select {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    background: var(--surface-color);
+}
+
+.apps-list {
+    background: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    height: 400px;
+    overflow-y: auto;
+    font-family: Arial, sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    white-space: pre-wrap;
+}
+
+.app-item {
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.app-item:last-child {
+    border-bottom: none;
+}
+
+.app-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.app-bundle {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.app-version {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    background: var(--background-color);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+}
+
+/* Parse Container */
+.parse-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    height: 100%;
+}
+
+.parse-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.parse-options {
+    display: flex;
+    gap: 2rem;
+    padding: 1rem;
+    background: var(--background-color);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
+.option-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.option-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.option-group input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.option-group select {
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    background: var(--surface-color);
+}
+
+.option-group select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: var(--background-color);
+}
+
+/* Results */
+.results-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1rem;
+    gap: 1px;
+}
+
+.results-tab {
+    padding: 0.5rem 1rem;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.results-tab:hover {
+    color: var(--text-primary);
+    background: var(--background-color);
+}
+
+.results-tab.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.results-content {
+    background: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    min-height: 400px;
+    max-height: none;
+    overflow-y: auto;
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+/* Android Triage Component */
+.android-triage-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    height: 100%;
+}
+
+.triage-left,
+.triage-right {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Toast Notifications */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 400px;
+}
+
+.toast {
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    animation: slideIn 0.3s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.toast.success {
+    background: var(--success-color);
+    color: white;
+}
+
+.toast.error {
+    background: var(--error-color);
+    color: white;
+}
+
+.toast.warning {
+    background: var(--warning-color);
+    color: white;
+}
+
+.toast.info {
+    background: var(--primary-color);
+    color: white;
+}
+
+.toast-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.toast-message {
+    flex: 1;
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1.125rem;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 0.5rem;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.toast-close:hover {
+    opacity: 1;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.toast.removing {
+    animation: slideOut 0.3s ease-out forwards;
+}
+
+/* Data Tables */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface-color);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.data-table th,
+.data-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.data-table th {
+    background: var(--background-color);
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+}
+
+.data-table td {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.data-table tr:hover {
+    background: var(--background-color);
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Badges */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.badge.success {
+    background: rgb(34 197 94 / 0.1);
+    color: var(--success-color);
+}
+
+.badge.warning {
+    background: rgb(245 158 11 / 0.1);
+    color: var(--warning-color);
+}
+
+.badge.error {
+    background: rgb(239 68 68 / 0.1);
+    color: var(--error-color);
+}
+
+.badge.info {
+    background: rgb(59 130 246 / 0.1);
+    color: var(--primary-color);
+}
+
+/* Card Grid */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+}
+
+.card {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.card-subtitle {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+
+.card-content {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+/* Responsive adjustments for components */
+@media (max-width: 1024px) {
+    .ios-backup-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .backup-right {
+        max-height: none;
+    }
+    
+    .android-triage-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .parse-options {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .toast-container {
+        left: 20px;
+        right: 20px;
+        max-width: none;
+    }
+    
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .apps-controls {
+        gap: 0.5rem;
+    }
+    
+    .search-container {
+        flex-direction: column;
+    }
+}

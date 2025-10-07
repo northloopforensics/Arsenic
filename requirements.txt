@@ -1,22 +1,37 @@
-reportlab
-json
-logging
-hashlib
-zipfile
-os
-sys
-datetime
-re
-time
+# Core GUI and System Libraries
 customtkinter>=5.2.0
-pymobiledevice3>=2.0.0
-pyiosbackup>=0.5.0
-pandas>=2.0.0
 pillow>=9.5.0
+
+# iOS Device Management
+pymobiledevice3>=2.0.0
+pyiosbackup
+
+# Data Processing
 pandas>=2.0.0
 numpy>=1.24.0
-sqlite3
-plistlib
+
+# PDF Generation
+reportlab>=4.0.0
+
+# Timezone Support
+pytz>=2023.3
+tzlocal>=4.3
+
+# HEIC Image Support and Enhanced EXIF Processing
+pyheif>=0.8.0
+pillow-heif>=1.1.0
+exifread>=3.4.0
+
+# Video Processing and Thumbnails
+opencv-python>=4.8.0
+
+# Additional dependencies that may be required
+requests>=2.31.0
+lxml>=4.9.0
+
+# Note: The following are built-in Python modules and don't need to be installed:
+# json, logging, hashlib, zipfile, os, sys, datetime, re, time, sqlite3, plistlib
+# threading, subprocess, platform, concurrent.futures, traceback, glob, csv, webbrowser
 
 
 

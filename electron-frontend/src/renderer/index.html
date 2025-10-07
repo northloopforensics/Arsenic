@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arsenic Mobile Triage Tool</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/csv-data-viewer.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Application Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="app-logo">
+                        <div class="logo-image">
+                            <img src="assets/icon_256x256.png" alt="Arsenic Logo" class="app-icon">
+                        </div>
+                        <div class="app-title">
+                            <h1>Arsenic Mobile Triage Tool</h1>
+                            <p class="subtitle">North Loop Consulting © 2025</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="case-management">
+                        <div class="case-field">
+                            <label for="case-number">Case Number:</label>
+                            <input type="text" id="case-number" placeholder="Enter case number...">
+                        </div>
+                        <div class="case-field">
+                            <label for="output-directory">Output Directory:</label>
+                            <div class="directory-input">
+                                <input type="text" id="output-directory" placeholder="Select output directory..." readonly>
+                                <button type="button" class="btn btn-secondary" onclick="selectOutputDirectory()">Browse</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Sidebar with Platform Selection -->
+            <aside class="sidebar">
+                <div class="sidebar-content">
+                    <h3>Platform</h3>
+                    <div class="platform-buttons">
+                        <button class="platform-btn active" data-platform="android" onclick="switchPlatform('android')">
+                            Android Triage
+                        </button>
+                        <button class="platform-btn" data-platform="ios" onclick="switchPlatform('ios')">
+                            iOS Triage
+                        </button>
+                    </div>
+
+                    <div class="separator"></div>
+
+                    <h4>Device Status</h4>
+                    <div class="device-status">
+                        <div id="android-status" class="status-indicator disconnected">
+                            🔴 Android: No device
+                        </div>
+                        <div id="ios-status" class="status-indicator disconnected">
+                            🔴 iOS: No device
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Content Area -->
+            <main class="content-area">
+                <!-- Android Platform Content -->
+                <div id="android-content" class="platform-content active">
+                    <div class="platform-header">
+                        <h2>Android Device Triage</h2>
+                    </div>
+                    
+                    <div class="tab-container">
+                        <div class="tab-buttons">
+                            <button class="tab-btn active" data-tab="android-triage" onclick="switchTab('android', 'triage')">Triage</button>
+                            <button class="tab-btn" data-tab="android-backup" onclick="switchTab('android', 'backup')">Backup</button>
+                            <button class="tab-btn" data-tab="android-parser" onclick="switchTab('android', 'parser')">Parser</button>
+                            <button class="tab-btn" data-tab="android-screenshots" onclick="switchTab('android', 'screenshots')">Screenshots</button>
+                        </div>
+                        
+                        <div class="tab-content">
+                            <!-- Android Triage Tab -->
+                            <div id="android-triage" class="tab-pane active">
+                                <div class="panel">
+                                    <h3>Device Connection & Information</h3>
+                                    <div class="device-status-section">
+                                        <div class="status-display">
+                                            <span class="status-label">Status:</span>
+                                            <span id="android-device-status" class="status-indicator offline">No Device Connected</span>
+                                        </div>
+                                        <button class="btn btn-secondary" onclick="refreshAndroidConnection()">Refresh Connection</button>
+                                    </div>
+                                    
+                                    <div id="android-device-info" class="device-info-panel compact hidden">
+                                        <h4>Device Info</h4>
+                                        <div class="device-info-content">
+                                            <table class="device-info-table" style="font-family: Arial, sans-serif;">
+                                                <tr>
+                                                    <td class="label">Model:</td>
+                                                    <td class="value" id="device-model">-</td>
+                                                    <td class="label">Manufacturer:</td>
+                                                    <td class="value" id="device-manufacturer">-</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">Android Version:</td>
+                                                    <td class="value" id="device-android-version">-</td>
+                                                    <td class="label">API Level:</td>
+                                                    <td class="value" id="device-sdk-version">-</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">Serial:</td>
+                                                    <td class="value" id="device-serial">-</td>
+                                                    <td class="label">Build ID:</td>
+                                                    <td class="value" id="device-build-id">-</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">Security Patch:</td>
+                                                    <td class="value" id="device-security-patch">-</td>
+                                                    <td class="label">Encryption:</td>
+                                                    <td class="value" id="device-encryption-status">-</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">Hardware:</td>
+                                                    <td class="value" id="device-hardware">-</td>
+                                                    <td class="label">IMEI:</td>
+                                                    <td class="value" id="device-imei">-</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">Brand:</td>
+                                                    <td class="value" id="device-brand">-</td>
+                                                    <td class="label">Chipset:</td>
+                                                    <td class="value" id="device-chipset">-</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="panel triage-panel">
+    
+                                    <div class="triage-description compact">
+                                        <p>Perform Android triage: device info, SMS, contacts, call logs, apps, and media files.</p>
+                                    </div>
+
+                                    <div class="triage-controls">
+                                        <button class="btn btn-primary triage-btn" id="start-android-triage" onclick="startAndroidTriage()" disabled>
+                                            <span class="btn-text">Start Android Triage</span>
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="progress-container">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" id="android-progress-fill" style="width: 0%"></div>
+                                        </div>
+                                        <div class="progress-text" id="android-progress-text">Ready to start triage</div>
+                                    </div>
+                                    
+                                    <!-- Triage Results Section -->
+                                    <div class="triage-results-section" id="android-triage-results">
+                                        <h4>Triage Results</h4>
+                                        <div class="results-container">
+                                            <!-- Results Tab Navigation -->
+                                            <div class="results-tab-nav" id="results-tab-nav" style="display: none;">
+                                                <button class="results-tab-btn active" onclick="showResultsTab('apps')">Apps</button>
+                                                <button class="results-tab-btn" onclick="showResultsTab('sms')">SMS</button>
+                                                <button class="results-tab-btn" onclick="showResultsTab('contacts')">Contacts</button>
+                                                <button class="results-tab-btn" onclick="showResultsTab('call-logs')">Call Logs</button>
+                                                <button class="results-tab-btn" onclick="showResultsTab('photos')">Photos</button>
+                                                <button class="results-tab-btn" onclick="showResultsTab('videos')">Videos</button>
+                                                <button class="results-tab-btn" onclick="showResultsTab('notifications')">Notifications</button>
+                                            </div>
+                                            
+                                            <!-- Results Content Panes -->
+                                            <div class="results-content">
+                                                <!-- Apps Tab -->
+                                                <div id="results-apps" class="results-pane active">
+                                                    <div class="csv-table-container">
+                                                        <div class="csv-controls">
+                                                            <div class="csv-search-box">
+                                                                <input type="text" id="apps-search" placeholder="Search apps...">
+                                                                <span class="search-icon">🔍</span>
+                                                            </div>
+                                                            <div class="csv-info">
+                                                                <span id="apps-stats">No apps data available</span>
+                                                                <select id="apps-page-size">
+                                                                    <option value="25">25</option>
+                                                                    <option value="50" selected>50</option>
+                                                                    <option value="100">100</option>
+                                                                    <option value="all">All</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <table class="csv-table" id="apps-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th class="sortable" data-column="package">Package Name</th>
+                                                                    <th class="sortable" data-column="name">App Name</th>
+                                                                    <th class="sortable" data-column="version">Version</th>
+                                                                    <th class="sortable" data-column="user_id">User ID</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="apps-tbody">
+                                                                <tr><td colspan="4">No apps data available</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <div class="csv-pagination">
+                                                            <div class="pagination-info">
+                                                                <span id="apps-page-info">Page 1 of 1</span>
+                                                            </div>
+                                                            <div class="pagination-controls">
+                                                                <button class="btn" id="apps-prev-page" disabled>Previous</button>
+                                                                <button class="btn" id="apps-next-page" disabled>Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- SMS Tab -->
+                                                <div id="results-sms" class="results-pane">
+                                                    <div class="csv-table-container">
+                                                        <div class="csv-controls">
+                                                            <div class="csv-search-box">
+                                                                <input type="text" id="sms-search" placeholder="Search SMS messages...">
+                                                                <span class="search-icon">🔍</span>
+                                                            </div>
+                                                            <div class="csv-info">
+                                                                <span id="sms-stats">No SMS data available</span>
+                                                                <select id="sms-page-size">
+                                                                    <option value="25">25</option>
+                                                                    <option value="50" selected>50</option>
+                                                                    <option value="100">100</option>
+                                                                    <option value="all">All</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <table class="csv-table" id="sms-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <!-- Dynamic headers will be generated by JavaScript -->
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="sms-tbody">
+                                                                <tr><td colspan="10">No SMS data available</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <div class="csv-pagination">
+                                                            <div class="pagination-info">
+                                                                <span id="sms-page-info">Page 1 of 1</span>
+                                                            </div>
+                                                            <div class="pagination-controls">
+                                                                <button class="btn" id="sms-prev-page" disabled>Previous</button>
+                                                                <button class="btn" id="sms-next-page" disabled>Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Contacts Tab -->
+                                                <div id="results-contacts" class="results-pane">
+                                                    <div class="csv-table-container">
+                                                        <div class="csv-controls">
+                                                            <div class="csv-search-box">
+                                                                <input type="text" id="contacts-search" placeholder="Search contacts...">
+                                                                <span class="search-icon">🔍</span>
+                                                            </div>
+                                                            <div class="csv-info">
+                                                                <span id="contacts-stats">No contacts data available</span>
+                                                                <select id="contacts-page-size">
+                                                                    <option value="25">25</option>
+                                                                    <option value="50" selected>50</option>
+                                                                    <option value="100">100</option>
+                                                                    <option value="all">All</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <table class="csv-table" id="contacts-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <!-- Dynamic headers will be generated by JavaScript -->
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="contacts-tbody">
+                                                                <tr><td colspan="10">No contacts data available</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <div class="csv-pagination">
+                                                            <div class="pagination-info">
+                                                                <span id="contacts-page-info">Page 1 of 1</span>
+                                                            </div>
+                                                            <div class="pagination-controls">
+                                                                <button class="btn" id="contacts-prev-page" disabled>Previous</button>
+                                                                <button class="btn" id="contacts-next-page" disabled>Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Call Logs Tab -->
+                                                <div id="results-call-logs" class="results-pane">
+                                                    <div class="csv-table-container">
+                                                        <div class="csv-controls">
+                                                            <div class="csv-search-box">
+                                                                <input type="text" id="call-logs-search" placeholder="Search call logs...">
+                                                                <span class="search-icon">🔍</span>
+                                                            </div>
+                                                            <div class="csv-info">
+                                                                <span id="call-logs-stats">No call logs data available</span>
+                                                                <select id="call-logs-page-size">
+                                                                    <option value="25">25</option>
+                                                                    <option value="50" selected>50</option>
+                                                                    <option value="100">100</option>
+                                                                    <option value="all">All</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <table class="csv-table" id="call-logs-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <!-- Dynamic headers will be generated by JavaScript -->
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="call-logs-tbody">
+                                                                <tr><td colspan="10">No call logs data available</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <div class="csv-pagination">
+                                                            <div class="pagination-info">
+                                                                <span id="call-logs-page-info">Page 1 of 1</span>
+                                                            </div>
+                                                            <div class="pagination-controls">
+                                                                <button class="btn" id="call-logs-prev-page" disabled>Previous</button>
+                                                                <button class="btn" id="call-logs-next-page" disabled>Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Photos Tab -->
+                                                <div id="results-photos" class="results-pane">
+                                                    <div class="csv-table-container">
+                                                        <div class="csv-controls">
+                                                            <div class="csv-search-box">
+                                                                <input type="text" id="photos-search" placeholder="Search photos...">
+                                                                <span class="search-icon">🔍</span>
+                                                            </div>
+                                                            <div class="csv-info">
+                                                                <span id="photos-stats">No photos data available</span>
+                                                                <select id="photos-page-size">
+                                                                    <option value="25">25</option>
+                                                                    <option value="50" selected>50</option>
+                                                                    <option value="100">100</option>
+                                                                    <option value="all">All</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <table class="csv-table" id="photos-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <!-- Dynamic headers will be generated by JavaScript -->
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="photos-tbody">
+                                                                <tr><td colspan="10">No photos data available</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <div class="csv-pagination">
+                                                            <div class="pagination-info">
+                                                                <span id="photos-page-info">Page 1 of 1</span>
+                                                            </div>
+                                                            <div class="pagination-controls">
+                                                                <button class="btn" id="photos-prev-page" disabled>Previous</button>
+                                                                <button class="btn" id="photos-next-page" disabled>Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Videos Tab -->
+                                                <div id="results-videos" class="results-pane">
+                                                    <div class="csv-table-container">
+                                                        <div class="csv-controls">
+                                                            <div class="csv-search-box">
+                                                                <input type="text" id="videos-search" placeholder="Search videos...">
+                                                                <span class="search-icon">🔍</span>
+                                                            </div>
+                                                            <div class="csv-info">
+                                                                <span id="videos-stats">No videos data available</span>
+                                                                <select id="videos-page-size">
+                                                                    <option value="25">25</option>
+                                                                    <option value="50" selected>50</option>
+                                                                    <option value="100">100</option>
+                                                                    <option value="all">All</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <table class="csv-table" id="videos-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <!-- Dynamic headers will be generated by JavaScript -->
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="videos-tbody">
+                                                                <tr><td colspan="10">No videos data available</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <div class="csv-pagination">
+                                                            <div class="pagination-info">
+                                                                <span id="videos-page-info">Page 1 of 1</span>
+                                                            </div>
+                                                            <div class="pagination-controls">
+                                                                <button class="btn" id="videos-prev-page" disabled>Previous</button>
+                                                                <button class="btn" id="videos-next-page" disabled>Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Notifications Tab -->
+                                                <div id="results-notifications" class="results-pane">
+                                                    <div class="csv-table-container">
+                                                        <div class="csv-controls">
+                                                            <div class="csv-search-box">
+                                                                <input type="text" id="notifications-search" placeholder="Search notifications...">
+                                                                <span class="search-icon">🔍</span>
+                                                            </div>
+                                                            <div class="csv-info">
+                                                                <span id="notifications-stats">No notifications data available</span>
+                                                                <select id="notifications-page-size">
+                                                                    <option value="25">25</option>
+                                                                    <option value="50" selected>50</option>
+                                                                    <option value="100">100</option>
+                                                                    <option value="all">All</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <table class="csv-table" id="notifications-table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <!-- Dynamic headers will be generated by JavaScript -->
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="notifications-tbody">
+                                                                <tr><td colspan="10">No notifications data available</td></tr>
+                                                            </tbody>
+                                                        </table>
+                                                        <div class="csv-pagination">
+                                                            <div class="pagination-info">
+                                                                <span id="notifications-page-info">Page 1 of 1</span>
+                                                            </div>
+                                                            <div class="pagination-controls">
+                                                                <button class="btn" id="notifications-prev-page" disabled>Previous</button>
+                                                                <button class="btn" id="notifications-next-page" disabled>Next</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Android Backup Tab -->
+                            <div id="android-backup" class="tab-pane">
+                                <div class="panel">
+                                    <h3>Android Device Backup</h3>
+                                    <div class="info-text">
+                                        Create a backup of the connected Android device including applications, data, and system settings using ADB backup functionality.
+                                    </div>
+                                    
+                                    <div class="backup-options">
+                                        <h4>Backup Options</h4>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="backup-apps" checked>
+                                            <span>Application data</span>
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="backup-shared">
+                                            <span>Shared storage (SD card)</span>
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="backup-system">
+                                            <span>System data</span>
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="backup-all">
+                                            <span>All installed packages</span>
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" id="use-forensic-apk" checked>
+                                            <span>📲 Use app-based collection (arsenic_triage.apk)</span>
+                                        </label>
+                                    </div>
+
+                                    <div class="backup-controls">
+                                        <button class="btn btn-primary large" id="start-android-backup" onclick="startAndroidBackup()" disabled>
+                                            Start Android Backup
+                                        </button>
+                                        <div class="status-text" id="android-backup-status">Connect a device, provide case number, and output location to enable backup.</div>
+                                    </div>
+
+                                    <div class="progress-container" id="backup-progress-container" style="display: none;">
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" id="backup-progress-fill" style="width: 0%"></div>
+                                        </div>
+                                        <div class="progress-text" id="backup-progress-text">Preparing backup...</div>
+                                    </div>
+                                    
+                                    <div class="backup-status-section" style="margin-top: 15px;">
+                                        <h4>Backup Status</h4>
+                                        <div class="status-log" id="backup-status-log" style="height: 150px; padding: 10px; background: #1a1a1a; color: #e0e0e0; font-family: 'Courier New', monospace; font-size: 12px; border-radius: 4px; overflow-y: auto; white-space: pre-wrap;">Ready to start backup...</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Android Backup Processing Tab -->
+                            <div id="android-parser" class="tab-pane">
+                                <div class="panel">
+                                    <h3>Android Data Analysis & Forensic Reports</h3>
+                                    <div class="info-text">
+                                        Analyze Android backup files (.ab) and APK-collected data to generate comprehensive forensic reports and CSV exports.
+                                    </div>
+                                    
+                                    <!-- File Selection Section -->
+                                    <div class="file-selection-grid">
+                                        <div class="file-section">
+                                            <h4>File/Folder Selection</h4>
+                                            
+                                            <div class="file-input-group">
+                                                <label for="ab-file-input">Android Backup (.ab) File:</label>
+                                                <div class="file-input">
+                                                    <input type="text" id="ab-file-input" placeholder="Select Android backup file..." readonly>
+                                                    <button class="btn btn-secondary" onclick="selectAbFile()">Browse</button>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="file-input-group">
+                                                <label for="apk-dir-input">APK Data Directory:</label>
+                                                <div class="file-input">
+                                                    <input type="text" id="apk-dir-input" placeholder="Select APK collected data directory..." readonly>
+                                                    <button class="btn btn-secondary" onclick="selectApkDir()">Browse</button>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="file-input-group">
+                                                <label for="analysis-output-input">Output Directory:</label>
+                                                <div class="file-input">
+                                                    <input type="text" id="analysis-output-input" placeholder="Select output directory for analysis..." readonly>
+                                                    <button class="btn btn-secondary" onclick="selectAnalysisOutput()">Browse</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="options-section">
+                                            <h4>Processing Options</h4>
+                                            
+                                            <div class="processing-options">
+                                                <label class="checkbox-item">
+                                                    <input type="checkbox" id="extract-ab-option" checked>
+                                                    <span>📦 Extract Android Backup (.ab) file</span>
+                                                </label>
+                                                
+                                                <label class="checkbox-item">
+                                                    <input type="checkbox" id="parse-apk-option" checked>
+                                                    <span>📱 Parse APK collected data to CSV</span>
+                                                </label>
+                                                
+                                                <label class="checkbox-item">
+                                                    <input type="checkbox" id="generate-report-option" checked>
+                                                    <span>📊 Generate comprehensive forensic report</span>
+                                                </label>
+                                                
+                                                <label class="checkbox-item">
+                                                    <input type="checkbox" id="create-timeline-option" checked>
+                                                    <span>⏰ Create forensic timeline</span>
+                                                </label>
+                                            </div>
+                                            
+                                            <div class="processing-info">
+                                                <div class="info-box">
+                                                    <h5>What this does:</h5>
+                                                    <ul>
+                                                        <li><strong>AB Extraction:</strong> Uses abe.jar to extract .ab backup files</li>
+                                                        <li><strong>APK Parsing:</strong> Converts JSON data to CSV reports with timestamps</li>
+                                                        <li><strong>Report Generation:</strong> Creates interactive HTML forensic report</li>
+                                                        <li><strong>Timeline Creation:</strong> Builds chronological CSV timeline</li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Analysis Controls -->
+                                    <div class="analysis-controls">
+                                        <button class="btn btn-primary btn-large" id="start-analysis" onclick="startAndroidAnalysis()" disabled>
+                                            Start Analysis
+                                        </button>
+                                        
+                                        <div class="progress-section" id="analysis-progress-section" style="display: none;">
+                                            <div class="progress-info">
+                                                <span id="analysis-progress-text">Processing...</span>
+                                                <span id="analysis-progress-percent">0%</span>
+                                            </div>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" id="analysis-progress-fill" style="width: 0%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Console Output -->
+                                    <div class="console-section">
+                                        <h4>Analysis Console</h4>
+                                        <div class="console-output" id="analysis-console">
+                                            Select input files and choose processing options to begin analysis...
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Results Section -->
+                                    <div class="results-section" id="analysis-results" style="display: none;">
+                                        <h4>Analysis Results</h4>
+                                        <div class="results-grid" id="analysis-results-grid">
+                                            <!-- Results will be populated here -->
+                                        </div>
+                                        
+                        <div class="results-actions">
+                            <button class="btn btn-success" onclick="openResultsFolder()">📁 Open Results Folder</button>
+                            <button class="btn btn-info" onclick="viewForensicReport()">📄 View Report</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Android Screenshots Tab -->
+            <div id="android-screenshots" class="tab-pane">
+                <div class="panel">
+                    <h3>Android Device Screenshots</h3>
+                    <div class="panel-content">
+                        <!-- Screenshot Control Section -->
+                        <div class="screenshot-control-section">
+                            <div class="screenshot-controls">
+                                <button class="btn btn-primary" id="capture-screenshot-btn" onclick="captureScreenshot()" disabled>
+                                    <span class="btn-text">Capture Screenshot</span>
+                                    <div class="loading-spinner" style="display: none;"></div>
+                                </button>
+                                <div class="screenshot-info">
+                                    <span id="screenshot-count">0 screenshots captured</span>
+                                </div>
+                            </div>
+                            
+                            <div class="screenshot-gallery" id="screenshot-gallery">
+                                <div class="gallery-placeholder">
+                                    Screenshots will appear here after capture
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-section" style="margin-top: 20px;">
+                            <h4>Screenshot Information</h4>
+                            <ul class="info-list">
+                                <li>Screenshots are automatically saved to your case folder</li>
+                                <li>Filenames use format: <code>{CaseNumber}_{UnixTimestamp}.png</code></li>
+                                <li>All screenshots are stored in: <code>{CaseFolder}/Screenshots/</code></li>
+                                <li>Click thumbnails below to view full-size images</li>
+                                <li>Screenshots can be collected before, during, or after triage</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>                <!-- iOS Platform Content -->
+                <div id="ios-content" class="platform-content">
+                    <div class="platform-header">
+                        <h2>iOS Device Triage</h2>
+                    </div>
+                    
+                    <div class="tab-container">
+                        <div class="tab-buttons">
+                            <button class="tab-btn" data-tab="ios-backup" onclick="switchTab('ios', 'backup')">iOS Backup & Device Info</button>
+                            <button class="tab-btn active" data-tab="ios-parser" onclick="switchTab('ios', 'parser')">Backup Parser</button>
+                        </div>
+                        
+                        <div class="tab-content">
+                            <!-- iOS Backup Tab -->
+                            <div id="ios-backup" class="tab-pane">
+                                <div class="ios-backup-layout">
+                                    <!-- Top row: Device Info and Apps side by side -->
+                                    <div class="ios-top-row">
+                                        <div class="device-info-section">
+                                            <div class="panel">
+                                                <h3>Device Information</h3>
+                                                <div class="device-status" id="ios-device-status">Checking for device...</div>
+                                                <div class="device-info compact" id="ios-device-info">
+                                                    Connect an iOS device to view device information...
+                                                </div>
+                                                <button class="btn btn-secondary" onclick="refreshiOSInfo()">Refresh Device Info</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="apps-info-section">
+                                            <div class="panel apps-panel">
+                                                <h3>Installed Applications</h3>
+                                                
+                                                <div class="apps-search-container">
+                                                    <label for="ios-apps-search">Search:</label>
+                                                    <input type="text" id="ios-apps-search" placeholder="Search third-party applications..." oninput="filterIOSApps()">
+                                                </div>
+                                                
+                                                <div class="apps-count" id="ios-apps-count">0 apps</div>
+                                                
+                                                <div class="apps-list-container">
+                                                    <div class="apps-list" id="ios-apps-list">
+                                                        No apps loaded. Connect device and click refresh to view installed applications.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Bottom section: Backup controls spanning full width -->
+                                    <div class="ios-backup-section">
+                                        <div class="panel">
+                                            <h3>Create a Backup</h3>
+                                            <div class="backup-controls-row">
+                                                <div class="backup-settings">
+                                                    <div class="info-text">
+                                                        Creates encrypted iOS device backup. Attempts to place backup password of '1234'.<br>
+                                                        Provide case number and output directory above.
+                                                    </div>
+                                                    
+                                                    <div class="field-group">
+                                                        <label class="checkbox-item">
+                                                            <input type="checkbox" id="include-logs" checked>
+                                                            <span>Include device logs</span>
+                                                        </label>
+                                                    </div>
+                                                    
+                                                    <button class="btn btn-primary large" id="start-ios-backup" onclick="startiOSBackup()" disabled>
+                                                        Start iOS Backup
+                                                    </button>
+                                                </div>
+                                                
+                                                <div class="backup-status">
+                                                    <div class="progress-container">
+                                                        <div class="progress-bar">
+                                                            <div class="progress-fill" id="ios-progress-fill" style="width: 0%"></div>
+                                                        </div>
+                                                        <div class="progress-text" id="ios-progress-text">Ready to start backup process...</div>
+                                                    </div>
+                                                    <div class="status-log" id="ios-status-log">Ready to start backup process...</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- iOS Parser Tab - Clean Implementation -->
+                            <div id="ios-parser" class="tab-pane active">
+                                <!-- Backup Folder Selection Panel -->
+                                <div class="panel">
+                                    <h3>Parse Existing iOS Backup</h3>
+                                    <div class="info-text">
+                                        📂 Parse and analyze existing iOS backup folders from iTunes/Finder<br>
+                                        Supports encrypted and unencrypted backup directories
+                                    </div>
+                                    
+                                    <div class="field-group">
+                                        <label for="ios-backup-folder">Backup Folder:</label>
+                                        <div class="file-input">
+                                            <input type="text" id="ios-backup-folder" placeholder="Select backup folder..." readonly>
+                                            <button class="btn btn-secondary" onclick="selectIOSBackupFolder()">Browse</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="field-group" id="ios-password-group" style="display: none;">
+                                        <label for="ios-backup-password">Backup Password:</label>
+                                        <input type="text" id="ios-backup-password" placeholder="Enter backup password...">
+                                        <div class="info-text" style="margin-top: 5px; font-size: 0.9em; color: #888;">
+                                            This backup is encrypted and requires a password to decrypt. The default password for Arsenic is 1234.
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Taxonomy Parsing Options -->
+                                    <div class="field-group">
+                                        <div class="checkbox-group">
+                                            <input type="checkbox" id="ios-enable-taxonomy" onchange="toggleIOSTaxonomyOptions()">
+                                            <label for="ios-enable-taxonomy">Enable Image Taxonomy Analysis</label>
+                                        </div>
+                                        <div class="info-text" style="margin-top: 5px; font-size: 0.9em; color: #666;">
+                                            Classify and filter images based on content (people, vehicles, weapons, etc.)
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="ios-taxonomy-options" class="field-group" style="display: none;">
+                                        <label for="ios-taxonomy-type">Image Classification Type:</label>
+                                        <select id="ios-taxonomy-type" class="form-control">
+                                            <option value="">Select classification type...</option>
+                                            <option value="450">Currency</option>
+                                            <option value="492">Documents</option>
+                                            <option value="554">Firearms</option>
+                                            <option value="759">Keypads</option>
+                                            <option value="881">People</option>
+                                            <option value="983">Phones</option>
+                                            <option value="1447">Vehicles</option>
+                                            <option value="1605">Body Parts</option>
+                                            <option value="1622">Computers</option>
+                                            <option value="1632">Weapons</option>
+                                            <option value="1664">Handwriting</option>
+                                            <option value="1665">Screenshots</option>
+                                            <option value="1668">Laptops</option>
+                                            <option value="1736">Children</option>
+                                            <option value="1758">Teenagers</option>
+                                            <option value="1777">Underwear</option>
+                                            <option value="1600">Adults</option>
+                                            <option value="8">Buildings</option>
+                                            <option value="139">ATMs</option>
+                                            <option value="147">Babies</option>
+                                            <option value="1754">Masks</option>
+                                            <option value="1659">Military Uniforms</option>
+                                            <option value="800">License Plates</option>
+                                            <option value="13">Fire</option>
+                                            <option value="432">Credit Cards</option>
+                                            <option value="1086">Receipts</option>
+                                            <option value="2147483655">Outdoor Scenes</option>
+                                        </select>
+                                        <div class="info-text" style="margin-top: 5px; font-size: 0.9em; color: #666;">
+                                            Select the type of content to search for in images
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="ios-backup-status" class="info-text" style="margin-top: 10px; color: #666;"></div>
+                                    
+                                    <button class="btn btn-primary large" id="start-ios-parsing" onclick="startIOSBackupParsing()" disabled>
+                                        Parse Backup
+                                    </button>
+                                </div>
+
+                                <!-- Results Panel -->
+                                <div class="panel ios-results-panel">
+                                    <h3>iOS Backup Analysis Results</h3>
+                                    
+                                    <!-- Connected Device Info Panel - Hidden for parsing results -->
+                                    <!-- <div id="ios-device-info-compact" class="device-info-panel compact" style="display: none;">
+                                        <h4>Connected Device Information</h4>
+                                        <div class="device-info-content">
+                                            <div class="device-info-grid">
+                                                <div class="device-info-item">
+                                                    <span class="label">Model:</span>
+                                                    <span class="value" id="ios-device-model">-</span>
+                                                </div>
+                                                <div class="device-info-item">
+                                                    <span class="label">OS Version:</span>
+                                                    <span class="value" id="ios-device-os">-</span>
+                                                </div>
+                                                <div class="device-info-item">
+                                                    <span class="label">Serial:</span>
+                                                    <span class="value" id="ios-device-serial">-</span>
+                                                </div>
+                                                <div class="device-info-item">
+                                                    <span class="label">UDID:</span>
+                                                    <span class="value" id="ios-device-udid">-</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> -->
+
+                                    <!-- Backup Device Info Panel - Shown when iTunes backup folder is selected -->
+                                    <div id="ios-backup-device-info" class="device-info-panel compact" style="display: none;">
+                                        <h4>Backup Device Information</h4>
+                                        <div class="device-info-content">
+                                            <table class="device-info-table" style="font-family: Arial, sans-serif;">
+                                                <tr>
+                                                    <td class="label">Device Name:</td>
+                                                    <td class="value" id="backup-device-name">-</td>
+                                                    <td class="label">Model:</td>
+                                                    <td class="value" id="backup-device-model">-</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">OS Version:</td>
+                                                    <td class="value" id="backup-device-os">-</td>
+                                                    <td class="label">Serial:</td>
+                                                    <td class="value" id="backup-device-serial">-</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">IMEI:</td>
+                                                    <td class="value" id="backup-device-imei">-</td>
+                                                    <td class="label">ICCID:</td>
+                                                    <td class="value" id="backup-device-iccid">-</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="label">Phone Number:</td>
+                                                    <td class="value" id="backup-device-phone">-</td>
+                                                    <td class="label">UDID:</td>
+                                                    <td class="value" id="backup-device-udid">-</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="triage-results-section" id="ios-parser-results">
+                                <div class="results-container">
+                                            <div class="results-tab-nav" id="ios-results-tab-nav" style="display: none;">
+                                                <!-- Device Info tab removed - CSV report tabs will be dynamically populated -->
+                                                <div id="ios-csv-report-tabs"></div>
+                                            </div>
+                                            
+                                            <div class="results-content">
+                                                <!-- CSV Data Viewer Container -->
+                                                <div id="ios-results-csv-data" class="results-pane active">
+                                                    <div id="ios-csv-data-viewer"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Screenshot Modal -->
+    <div id="screenshot-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Screenshot Preview</h3>
+                <button class="modal-close" onclick="closeScreenshotModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <img id="modal-screenshot" src="" alt="Screenshot" class="modal-screenshot">
+                <div class="screenshot-details">
+                    <p id="screenshot-filename"></p>
+                    <!-- <p id="screenshot-timestamp"></p> -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeScreenshotModal()">Close</button>
+                <button class="btn btn-primary" onclick="openScreenshotInFolder()">📁 Show in Folder</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Processing...</p>
+        </div>
+    </div>
+
+    <!-- Encrypted Backup Password Modal -->
+    <div id="encrypted-backup-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3>🔐 Encrypted Backup Detected</h3>
+                <button class="modal-close" onclick="closePasswordModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="backup-info">
+                    <p><strong>Backup File:</strong> <span id="modal-backup-filename"></span></p>
+                    <p><strong>Status:</strong> <span class="encrypted-status">🔐 Encrypted - Password Required</span></p>
+                    <p><strong>Version:</strong> <span id="modal-backup-version"></span></p>
+                    <p><strong>Compression:</strong> <span id="modal-backup-compression"></span></p>
+                    <p><strong>File Size:</strong> <span id="modal-backup-size"></span></p>
+                </div>
+                
+                <div class="password-section">
+                    <label for="modal-backup-password">Enter Backup Password:</label>
+                    <input type="password" id="modal-backup-password" placeholder="Enter the backup password..." autofocus>
+                    <div class="password-help">
+                        <p>💡 <strong>Common passwords to try:</strong></p>
+                        <ul>
+                            <li>Leave blank (no password)</li>
+                            <li>"1234" (forensic tool default)</li>
+                            <li>Device unlock PIN/password</li>
+                            <li>Password set during backup creation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closePasswordModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmPasswordAndProceed()">Continue with Password</button>
+                <button class="btn btn-warning" onclick="proceedWithoutPassword()">Try Without Password</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/csv-data-viewer.js"></script>
+    <script src="js/photo-gallery.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
