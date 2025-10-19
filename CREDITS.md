@@ -49,7 +49,7 @@ Arsenic Mobile Triage is built upon the foundation of exceptional open-source so
 
 ---
 
-## iOS Forensics & Device Management
+## iOS Device Management
 
 - **[pymobiledevice3](https://github.com/doronz88/pymobiledevice3)** (≥2.0.0, ≥4.0.0)  
   *GNU General Public License v3.0*  
@@ -168,7 +168,7 @@ Arsenic Mobile Triage is built upon the foundation of exceptional open-source so
 
 ---
 
-## Android Forensics Tools
+## Android Tools
 
 - **[Android Debug Bridge (ADB)](https://developer.android.com/tools/adb)**  
   *Apache License 2.0*  
